@@ -3,7 +3,7 @@ const BlogPostSchema = (sequelize, DataTypes) => {
     id: DataTypes.INTEGER,
     title: DataTypes.STRING,
     content: DataTypes.STRING,
-    user_id: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     published: DataTypes.DATE,
     updated: DataTypes.DATE
   }, {
@@ -14,7 +14,7 @@ const BlogPostSchema = (sequelize, DataTypes) => {
   BlogPostTable.associate = (models) => {
     BlogPostTable.belongsTo(models.User, {
       as: 'users',
-      foreingKey: 'user_id'
+      foreingKey: 'userId'
     })
   }
 

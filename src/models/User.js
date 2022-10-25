@@ -13,7 +13,7 @@ const UserSchema = (sequelize, DataTypes) => {
   UserTable.associate = (models) => {
     UserTable.hasMany(models.BlogPost), {
       as: 'blog_posts',
-      foreingKey: 'user_id'
+      foreingKey: 'userId'
     }
   }
 

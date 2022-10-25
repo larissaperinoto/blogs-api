@@ -1,5 +1,8 @@
 const PostCategorySchema = (sequelize, DataTypes) => {
-  const PostCategoryTable = sequelize.define('Post_category', {}, {
+  const PostCategoryTable = sequelize.define('PostCategory', {
+      postId: DataTypes.INTEGER,
+      categoryId: DataTypes.INTEGER
+  }, {
     tableName: 'posts_categories',
     underscored: true,
   });
