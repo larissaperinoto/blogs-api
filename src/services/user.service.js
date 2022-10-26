@@ -10,4 +10,14 @@ const findOne = async ({ email, password }) => {
   return response;
 };
 
-module.exports = { findOne };
+const insert = async ({ email, password, displayName, image }) => {
+  const emailExists = await User.findOne({
+    where: { email },
+  });
+
+  if (emailExists) return { message: 'User already registered' };
+
+  await User.create({ email, password, displayName, image });
+};
+
+module.exports = { findOne, insert };

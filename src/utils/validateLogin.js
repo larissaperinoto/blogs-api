@@ -1,13 +1,15 @@
 const Joi = require('joi');
 
+const fildsRequisred = 'Some required fields are missing';
+
 const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
-    'any.required': 'Some required fields are missing',
-    'string.empty': 'Some required fields are missing',
+    'string.required': fildsRequisred,
+    'string.empty': fildsRequisred,
   }),
   password: Joi.string().required().min(5).messages({
-    'any.required': 'Some required fields are missing',
-    'string.empty': 'Some required fields are missing',
+    'string.required': fildsRequisred,
+    'string.empty': fildsRequisred,
   }),
 });
 
