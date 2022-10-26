@@ -1,6 +1,6 @@
 const { User } = require('../models');
 
-const findOne = async ({ email, password }) => {
+const findByResgister = async ({ email, password }) => {
   const user = await User.findOne({
     where: { email, password },
   });
@@ -37,9 +37,8 @@ const findById = async (id) => {
   if (!user) return { message: 'User does not exist' };
 
   const { password, ...userWithouPassword } = user.dataValues;
-  console.log(userWithouPassword);
 
   return userWithouPassword;
 };
 
-module.exports = { findOne, insert, findAll, findById };
+module.exports = { findByResgister, insert, findAll, findById };

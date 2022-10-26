@@ -6,7 +6,7 @@ const login = async (req, res) => {
   const message = validateLogin(req.body);
   if (message) return res.status(400).json({ message });
 
-  const isLoged = await userService.findOne(req.body);
+  const isLoged = await userService.findByResgister(req.body);
   if (isLoged.message) return res.status(400).json({ message: isLoged.message });
 
   const token = createToken(req.body);
