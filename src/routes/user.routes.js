@@ -5,7 +5,9 @@ const router = express.Router();
 const { userController } = require('../controllers');
 const { authMiddleware } = require('../middlewares');
 
-router.get('/', authMiddleware, userController.findAll);
 router.post('/', userController.newUser);
+router.use(authMiddleware);
+router.get('/', userController.findAll);
+router.get('/:id', userController.findById);
 
 module.exports = router;

@@ -1,13 +1,13 @@
 const { User } = require('../models');
 
 const findOne = async ({ email, password }) => {
-  const response = await User.findOne({
+  const user = await User.findOne({
     where: { email, password },
   });
 
-  if (!response) return { message: 'Invalid fields' };
+  if (!user) return { message: 'Invalid fields' };
 
-  return response;
+  return user;
 };
 
 const insert = async ({ email, password, displayName, image }) => {
@@ -29,4 +29,17 @@ const findAll = async () => {
   return usersWithoutPassword;
 };
 
-module.exports = { findOne, insert, findAll };
+const findById = async (id) => {
+  const user = await User.findOne({
+    where: { id },
+  });
+
+  if (!user) return { message: 'User does not exist' };
+
+  const { password, ...userWithouPassword } = user.dataValues;
+  console.log(userWithouPassword);
+
+  return userWithouPassword;
+};
+
+module.exports = { findOne, insert, findAll, findById };
