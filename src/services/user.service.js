@@ -20,4 +20,13 @@ const insert = async ({ email, password, displayName, image }) => {
   await User.create({ email, password, displayName, image });
 };
 
-module.exports = { findOne, insert };
+const findAll = async () => {
+  const users = await User.findAll();
+  const usersWithoutPassword = users.map(({ id, email, displayName, image }) => {
+    const response = { id, email, displayName, image };
+    return response;
+  });
+  return usersWithoutPassword;
+};
+
+module.exports = { findOne, insert, findAll };
