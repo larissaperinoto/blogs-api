@@ -1,11 +1,8 @@
-const { validateLogin, validateUserFields } = require('../utils/validations');
+const { validateUserFields } = require('../utils/validations');
 const createToken = require('../utils/createToken');
 const { userService } = require('../services');
 
 const login = async (req, res) => {
-  const message = validateLogin(req.body);
-  if (message) return res.status(400).json({ message });
-
   const isLoged = await userService.findByResgister(req.body);
   if (isLoged.message) return res.status(400).json({ message: isLoged.message });
 
