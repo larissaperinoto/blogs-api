@@ -10,6 +10,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     const user = jwt.verify(authorization, secret);
     req.user = user;
+
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Expired or invalid token' });

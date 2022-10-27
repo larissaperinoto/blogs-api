@@ -1,4 +1,4 @@
-const { validateLogin, validateNewUser } = require('../utils/validations');
+const { validateLogin, validateUserFields } = require('../utils/validations');
 const createToken = require('../utils/createToken');
 const { userService } = require('../services');
 
@@ -14,7 +14,7 @@ const login = async (req, res) => {
 };
 
 const newUser = async (req, res) => {
-  const message = validateNewUser(req.body);
+  const message = validateUserFields(req.body);
   if (message) return res.status(400).json({ message });
 
   const messageDB = await userService.insert(req.body);

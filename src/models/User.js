@@ -12,11 +12,11 @@ const UserSchema = (sequelize, DataTypes) => {
   });
 
   UserTable.associate = (models) => {
-    UserTable.hasMany(models.BlogPost), {
+    UserTable.hasMany(models.BlogPost, {
       as: 'blog_posts',
       foreingKey: 'userId'
-    }
-  }
+    })
+  };
 
   return UserTable;
 };

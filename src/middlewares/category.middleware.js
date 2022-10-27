@@ -1,8 +1,10 @@
-const authMiddleware = async (req, res, next) => {
-  const { name } = req.body;
-  if (!name) return res.status(400).json({ message: '"name" is required' });
+const { validateCategoryFields } = require('../utils/validations');
+
+const categoryValidation = async (req, res, next) => {
+  const validation = validateCategoryFields(req.body);
+  if (validation) return res.status(400).json({ message: validation });
 
   next();
 };
 
-module.exports = authMiddleware;
+module.exports = categoryValidation;

@@ -6,9 +6,9 @@ const nameSchema = Joi.object({
   }),
 });
 
-const validateNameField = (body) => {
+const validateCategoryFields = (body) => {
   const { error } = nameSchema.validate(body);
   if (error) return error.details[0].message;
 };
 
-module.exports = validateNameField;
+module.exports = validateCategoryFields;

@@ -1,0 +1,18 @@
+const { postService } = require('../services');
+
+const insert = async (req, res) => {
+  const post = await postService.insert(req.body, req.user);
+  const { message } = post;
+  if (message) return res.status(400).json({ message });
+  res.status(201).json(post);
+};
+
+const findAll = async (_req, res) => {
+  const posts = await postService.findAll();
+  res.status(200).json(posts);
+};
+
+module.exports = {
+  insert,
+  findAll,
+};
