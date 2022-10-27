@@ -41,7 +41,29 @@ const findAll = async () => {
   return formatedResponse;
 };
 
+const findById = async (postId) => {
+  const verifyId = await BlogPost.findOne({ where: { id: postId } });
+  if (verifyId === null || verifyId === undefined) return { message: 'Post does not exist' };
+  // Req 14 - Não consigo validar o Id.
+  const { dataValues: post } = await BlogPost.findOne({
+    where: { id: postId },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories' },
+
+    ],
+    attributes: { exclude: ['UserId'] },
+  });
+
+  const { user } = post;
+  const { title, content, published, updated, id, userId } = post;
+  const categories = post.categories.map(({ dataValues }) => dataValues);
+  const response = { title, content, published, updated, id, userId, user, categories };
+  return response;
+};
+
 module.exports = {
   insert,
   findAll,
+  findById,
 };

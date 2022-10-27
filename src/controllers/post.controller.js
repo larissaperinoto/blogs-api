@@ -12,7 +12,31 @@ const findAll = async (_req, res) => {
   res.status(200).json(posts);
 };
 
+const findById = async (req, res) => {
+  const { id } = req.params;
+
+  const post = await postService.findById(id);
+
+  const { message } = post;
+  if (message) return res.status(404).json({ message });
+
+  res.status(200).json(post);
+};
+
+const update = async (req, res) => {
+  const { id } = req.params;
+
+  const postUpdated = await postService.update(id, req.body);
+
+  const { message } = postUpdated;
+  if (message) return res.status().json({ message });
+
+  res.status(200).json(postUpdated);
+};
+
 module.exports = {
   insert,
   findAll,
+  findById,
+  update,
 };
