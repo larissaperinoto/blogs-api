@@ -3,9 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 const { userController } = require('../controllers');
-const { authMiddleware } = require('../middlewares');
+const { authMiddleware, validateUser } = require('../middlewares');
 
-router.post('/', userController.newUser);
+router.post('/', validateUser, userController.insert);
 router.use(authMiddleware);
 router.get('/', userController.findAll);
 router.get('/:id', userController.findById);

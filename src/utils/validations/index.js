@@ -1,11 +1,11 @@
-const validateLogin = require('./validateLogin');
+const validateLoginFields = require('./validateLoginFields');
 const validateUserFields = require('./validateUserFields');
 const validatePostFields = require('./validatePostFields');
 const validateCategoryFields = require('./validateCategoryFields');
 const validatePostUpdateFields = require('./validatePostUpdateFields');
 
 module.exports = {
-  validateLogin,
+  validateLoginFields,
   validateUserFields,
   validatePostFields,
   validateCategoryFields,

@@ -11,9 +11,9 @@ const loginSchema = Joi.object({
   }),
 });
 
-const validateLogin = (body) => {
+const validateLoginFields = (body) => {
   const { error } = loginSchema.validate(body);
   if (error) return error.details[0].message;
 };
 
-module.exports = validateLogin;
+module.exports = validateLoginFields;
