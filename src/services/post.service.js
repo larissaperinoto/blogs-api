@@ -29,7 +29,7 @@ const findAll = async () => {
 
     ],
     attributes: { exclude: ['UserId'] },
-  });
+  }); // Na 12, aparece uma UserId a mais e não sei de onde vem :(
 
   const formatedResponse = posts.map((post) => {
     const { user: { dataValues: user } } = post;
@@ -62,8 +62,21 @@ const findById = async (postId) => {
   return response;
 };
 
+const update = async (id, { title, content }, { email, password }) => {
+  const { dataValues: { id: userId } } = await User.findOne({ where: { email, password } });
+  const { dataValues: { userId: userIdPost } } = await BlogPost.findOne({ where: { id } });
+
+  if (userId !== userIdPost) return { message: 'Unauthorized user' };
+
+  await BlogPost.update({ title, content }, { where: { id } });
+
+  const postUpdated = await findById(id);
+  return postUpdated;
+};
+
 module.exports = {
   insert,
   findAll,
   findById,
+  update,
 };

@@ -1,10 +1,17 @@
-const { validatePostFields } = require('../utils/validations');
+const { validatePostFields, validatePostUpdateFields } = require('../utils/validations');
 
-const postValidation = (req, res, next) => {
+const allPostFieldsExists = (req, res, next) => {
   const validation = validatePostFields(req.body);
   if (validation) return res.status(400).json({ message: validation });
 
   next();
 };
 
-module.exports = postValidation;
+const updatePostFieldsExists = (req, res, next) => {
+  const validation = validatePostUpdateFields(req.body);
+  if (validation) return res.status(400).json({ message: validation });
+
+  next();
+};
+
+module.exports = { allPostFieldsExists, updatePostFieldsExists };

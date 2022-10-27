@@ -26,10 +26,10 @@ const findById = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
 
-  const postUpdated = await postService.update(id, req.body);
+  const postUpdated = await postService.update(id, req.body, req.user);
 
   const { message } = postUpdated;
-  if (message) return res.status().json({ message });
+  if (message) return res.status(401).json({ message });
 
   res.status(200).json(postUpdated);
 };
