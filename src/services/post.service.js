@@ -1,3 +1,5 @@
+const { Op } = require('sequelize');
+
 const { BlogPost, User, Category, PostCategory } = require('../models');
 
 const insert = async ({ title, content, categoryIds }, { email }) => {
@@ -21,25 +23,12 @@ const insert = async ({ title, content, categoryIds }, { email }) => {
   return dataValues;
 };
 
-const findAll = async () => {
-  const posts = await BlogPost.findAll({
+const findAll = async () => BlogPost.findAll({
     include: [
       { model: User, as: 'user', attributes: { exclude: ['password'] } },
       { model: Category, as: 'categories' },
-
     ],
-    attributes: { exclude: ['UserId'] },
-  }); // Na 12, aparece uma UserId a mais e não sei de onde vem :(
-
-  const formatedResponse = posts.map((post) => {
-    const { user: { dataValues: user } } = post;
-    const { title, content, published, updated, id, userId } = post;
-    const categories = post.categories.map(({ dataValues }) => dataValues);
-    return { title, content, published, updated, id, userId, user, categories };
   });
-
-  return formatedResponse;
-};
 
 const findById = async (postId) => {
   const verifyId = await BlogPost.findOne({ where: { id: postId } });
@@ -52,7 +41,6 @@ const findById = async (postId) => {
       { model: Category, as: 'categories' },
 
     ],
-    attributes: { exclude: ['UserId'] },
   });
 
   const { user } = post;
@@ -87,10 +75,25 @@ const remove = async (id, { email, password }) => {
   await PostCategory.destroy({ where: { postId: id } });
 };
 
+const search = async (q) => BlogPost.findAll({
+    where: {
+    [Op.or]: [
+      { title: { [Op.like]: `%${q}%` } },
+      { content: { [Op.like]: `%${q}%` } },
+    ],
+  },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories' },
+
+    ],
+ });
+
 module.exports = {
   insert,
   findAll,
   findById,
   update,
   remove,
+  search,
 };

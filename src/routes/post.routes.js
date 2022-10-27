@@ -9,6 +9,7 @@ const { authMiddleware,
 
 router.use(authMiddleware);
 router.post('/', allPostFieldsExists, postController.insert);
+router.get('/search', postController.search);
 router.get('/:id', postController.findById);
 router.get('/', postController.findAll);
 router.put('/:id', updatePostFieldsExists, postController.update);
