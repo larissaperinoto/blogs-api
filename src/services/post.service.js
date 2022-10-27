@@ -31,9 +31,6 @@ const findAll = async () => BlogPost.findAll({
   });
 
 const findById = async (postId) => {
-  const verifyId = await BlogPost.findOne({ where: { id: postId } });
-  if (verifyId === null) return { message: 'Post does not exist' };
-
   const post = await BlogPost.findOne({
     where: { id: postId },
     include: [
@@ -43,6 +40,7 @@ const findById = async (postId) => {
     ],
   });
 
+  if (post === null) return { message: 'Post does not exist' };
   return post;
 };
 

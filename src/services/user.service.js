@@ -20,14 +20,7 @@ const insert = async ({ email, password, displayName, image }) => {
   await User.create({ email, password, displayName, image });
 };
 
-const findAll = async () => {
-  const users = await User.findAll();
-  const usersWithoutPassword = users.map(({ id, email, displayName, image }) => {
-    const response = { id, email, displayName, image };
-    return response;
-  });
-  return usersWithoutPassword;
-};
+const findAll = async () => User.findAll({ attributes: { exclude: ['password'] } });
 
 const findById = async (id) => {
   const user = await User.findOne({
@@ -41,8 +34,6 @@ const findById = async (id) => {
   return userWithouPassword;
 };
 
-const remove = async ({ email, password }) => {
-  await User.destroy({ where: { email, password } });
-};
+const remove = async ({ email, password }) => User.destroy({ where: { email, password } });
 
 module.exports = { findByResgister, insert, findAll, findById, remove };
