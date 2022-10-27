@@ -25,13 +25,11 @@ const findAll = async () => User.findAll({ attributes: { exclude: ['password'] }
 const findById = async (id) => {
   const user = await User.findOne({
     where: { id },
+    attributes: { exclude: ['password'] },
   });
 
   if (!user) return { message: 'User does not exist' };
-
-  const { password, ...userWithouPassword } = user.dataValues;
-
-  return userWithouPassword;
+  return user;
 };
 
 const remove = async ({ email, password }) => User.destroy({ where: { email, password } });
