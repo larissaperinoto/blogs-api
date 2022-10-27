@@ -44,7 +44,7 @@ const findAll = async () => {
 const findById = async (postId) => {
   const verifyId = await BlogPost.findOne({ where: { id: postId } });
   if (verifyId === null || verifyId === undefined) return { message: 'Post does not exist' };
-  // Req 14 - Não consigo validar o Id.
+
   const { dataValues: post } = await BlogPost.findOne({
     where: { id: postId },
     include: [
@@ -74,9 +74,23 @@ const update = async (id, { title, content }, { email, password }) => {
   return postUpdated;
 };
 
+const remove = async (id, { email, password }) => {
+  const postExists = await BlogPost.findOne({ where: { id } });
+
+  if (postExists === null) return { status: 404, message: 'Post does not exist' };
+
+  const { dataValues: { userId: userIdPost } } = postExists;
+  const { dataValues: { id: userId } } = await User.findOne({ where: { email, password } });
+  if (userId !== userIdPost) return { status: 401, message: 'Unauthorized user' };
+
+  await BlogPost.destroy({ where: { id } });
+  await PostCategory.destroy({ where: { postId: id } });
+};
+
 module.exports = {
   insert,
   findAll,
   findById,
   update,
+  remove,
 };

@@ -12,5 +12,6 @@ router.post('/', allPostFieldsExists, postController.insert);
 router.get('/:id', postController.findById);
 router.get('/', postController.findAll);
 router.put('/:id', updatePostFieldsExists, postController.update);
+router.delete('/:id', postController.remove);
 
 module.exports = router;
