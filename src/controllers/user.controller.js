@@ -37,9 +37,16 @@ const findById = async (req, res) => {
   res.status(200).json(user);
 };
 
+const remove = async (req, res) => {
+  await userService.remove(req.user);
+
+  res.sendStatus(204);
+};
+
 module.exports = {
   login,
   newUser,
   findAll,
   findById,
+  remove,
 };

@@ -9,5 +9,6 @@ router.post('/', userController.newUser);
 router.use(authMiddleware);
 router.get('/', userController.findAll);
 router.get('/:id', userController.findById);
+router.delete('/me', userController.remove);
 
 module.exports = router;

@@ -41,4 +41,8 @@ const findById = async (id) => {
   return userWithouPassword;
 };
 
-module.exports = { findByResgister, insert, findAll, findById };
+const remove = async ({ email, password }) => {
+  await User.destroy({ where: { email, password } });
+};
+
+module.exports = { findByResgister, insert, findAll, findById, remove };
