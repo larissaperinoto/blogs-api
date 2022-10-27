@@ -32,9 +32,9 @@ const findAll = async () => BlogPost.findAll({
 
 const findById = async (postId) => {
   const verifyId = await BlogPost.findOne({ where: { id: postId } });
-  if (verifyId === null || verifyId === undefined) return { message: 'Post does not exist' };
+  if (verifyId === null) return { message: 'Post does not exist' };
 
-  const { dataValues: post } = await BlogPost.findOne({
+  const post = await BlogPost.findOne({
     where: { id: postId },
     include: [
       { model: User, as: 'user', attributes: { exclude: ['password'] } },
@@ -43,11 +43,7 @@ const findById = async (postId) => {
     ],
   });
 
-  const { user } = post;
-  const { title, content, published, updated, id, userId } = post;
-  const categories = post.categories.map(({ dataValues }) => dataValues);
-  const response = { title, content, published, updated, id, userId, user, categories };
-  return response;
+  return post;
 };
 
 const update = async (id, { title, content }, { email, password }) => {
