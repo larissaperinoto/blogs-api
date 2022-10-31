@@ -3,25 +3,36 @@ const { Op } = require('sequelize');
 const { BlogPost, User, Category, PostCategory } = require('../models');
 const createError = require('../utils/createError');
 
-const insert = async ({ title, content, categoryIds }, { email }) => {
-  const categories = categoryIds.map((id) => Category.findOne({
+const verifyCategoryId = async (categoryIds) => {
+  const categoryIdsExists = categoryIds.map((id) => Category.findOne({
     where: { id },
   }));
-  const resolvedPromises = await Promise.all(categories);
+
+  const resolvedPromises = await Promise.all(categoryIdsExists);
+
   if (resolvedPromises.some((item) => item === null)) {
     throw createError(400, 'one or more "categoryIds" not found');
   }
+};
 
-  const published = new Date();
-  const updated = new Date();
-  const { dataValues: { id: userId } } = await User.findOne({ where: { email } });
+const verifyIfUserBelongsToPost = async (email, password, userIdPost) => {
+  const { id: userId } = await User.findOne({ where: { email, password } });
+  if (userId !== userIdPost) throw createError(401, 'Unauthorized user');
+};
 
-  const { dataValues } = await BlogPost.create({ title, content, userId, published, updated });
+const insert = async ({ title, content, categoryIds }, { email }) => {
+  await verifyCategoryId(categoryIds);
 
-  const { id: postId } = dataValues;
+  const date = new Date();
+  const { id: userId } = await User.findOne({ where: { email } });
+
+  const post = await BlogPost
+    .create({ title, content, userId, published: date, updated: date });
+
+  const { id: postId } = post;
   categoryIds.map((id) => PostCategory.create({ postId, categoryId: id }));
 
-  return dataValues;
+  return post;
 };
 
 const findAll = async () => BlogPost.findAll({
@@ -37,7 +48,6 @@ const findById = async (postId) => {
     include: [
       { model: User, as: 'user', attributes: { exclude: ['password'] } },
       { model: Category, as: 'categories' },
-
     ],
   });
 
@@ -46,11 +56,8 @@ const findById = async (postId) => {
 };
 
 const update = async (id, { title, content }, { email, password }) => {
-  const { dataValues: { id: userId } } = await User.findOne({ where: { email, password } });
-  const { dataValues: { userId: userIdPost } } = await BlogPost.findOne({ where: { id } });
-
-  if (userId !== userIdPost) throw createError(401, 'Unauthorized user');
-
+  const { userId: userIdPost } = await findById(id);
+  await verifyIfUserBelongsToPost(email, password, userIdPost);
   await BlogPost.update({ title, content }, { where: { id } });
 
   const postUpdated = await findById(id);
@@ -58,14 +65,8 @@ const update = async (id, { title, content }, { email, password }) => {
 };
 
 const remove = async (id, { email, password }) => {
-  const postExists = await BlogPost.findOne({ where: { id } });
-
-  if (postExists === null) throw createError(404, 'Post does not exist');
-
-  const { dataValues: { userId: userIdPost } } = postExists;
-  const { dataValues: { id: userId } } = await User.findOne({ where: { email, password } });
-  if (userId !== userIdPost) throw createError(401, 'Unauthorized user');
-
+  const { userId: userIdPost } = await findById(id);
+  await verifyIfUserBelongsToPost(email, password, userIdPost);
   await BlogPost.destroy({ where: { id } });
   await PostCategory.destroy({ where: { postId: id } });
 };
