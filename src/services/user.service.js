@@ -1,11 +1,10 @@
 const { User } = require('../models');
+const createError = require('../utils/createError');
 
 const insert = async ({ email, password, displayName, image }) => {
-  const emailExists = await User.findOne({
-    where: { email },
-  });
+  const emailExists = await User.findOne({ where: { email } });
 
-  if (emailExists) return { message: 'User already registered' };
+  if (emailExists) throw createError(409, 'User already registered');
 
   await User.create({ email, password, displayName, image });
 };
@@ -18,7 +17,7 @@ const findById = async (id) => {
     attributes: { exclude: ['password'] },
   });
 
-  if (!user) return { message: 'User does not exist' };
+  if (!user) throw createError(404, 'User does not exist');
   return user;
 };
 

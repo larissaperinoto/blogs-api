@@ -2,9 +2,7 @@ const createToken = require('../utils/createToken');
 const { userService } = require('../services');
 
 const insert = async (req, res) => {
-  const messageDB = await userService.insert(req.body);
-  if (messageDB) return res.status(409).json(messageDB);
-
+  await userService.insert(req.body);
   const token = createToken(req.body);
   res.status(201).json({ token });
 };
@@ -17,14 +15,11 @@ const findAll = async (_req, res) => {
 const findById = async (req, res) => {
   const { id } = req.params;
   const user = await userService.findById(id);
-
-  if (user.message) return res.status(404).json({ message: user.message });
   res.status(200).json(user);
 };
 
 const remove = async (req, res) => {
   await userService.remove(req.user);
-
   res.sendStatus(204);
 };
 
