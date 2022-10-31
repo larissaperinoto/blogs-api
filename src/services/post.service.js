@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 
 const { BlogPost, User, Category, PostCategory } = require('../models');
+const createError = require('../utils/createError');
 
 const insert = async ({ title, content, categoryIds }, { email }) => {
   const categories = categoryIds.map((id) => Category.findOne({
@@ -8,7 +9,7 @@ const insert = async ({ title, content, categoryIds }, { email }) => {
   }));
   const resolvedPromises = await Promise.all(categories);
   if (resolvedPromises.some((item) => item === null)) {
-    return { message: 'one or more "categoryIds" not found' };
+    throw createError(400, 'one or more "categoryIds" not found');
   }
 
   const published = new Date();
@@ -40,7 +41,7 @@ const findById = async (postId) => {
     ],
   });
 
-  if (post === null) return { message: 'Post does not exist' };
+  if (post === null) throw createError(404, 'Post does not exist');
   return post;
 };
 
@@ -48,7 +49,7 @@ const update = async (id, { title, content }, { email, password }) => {
   const { dataValues: { id: userId } } = await User.findOne({ where: { email, password } });
   const { dataValues: { userId: userIdPost } } = await BlogPost.findOne({ where: { id } });
 
-  if (userId !== userIdPost) return { message: 'Unauthorized user' };
+  if (userId !== userIdPost) throw createError(401, 'Unauthorized user');
 
   await BlogPost.update({ title, content }, { where: { id } });
 
@@ -59,11 +60,11 @@ const update = async (id, { title, content }, { email, password }) => {
 const remove = async (id, { email, password }) => {
   const postExists = await BlogPost.findOne({ where: { id } });
 
-  if (postExists === null) return { status: 404, message: 'Post does not exist' };
+  if (postExists === null) throw createError(404, 'Post does not exist');
 
   const { dataValues: { userId: userIdPost } } = postExists;
   const { dataValues: { id: userId } } = await User.findOne({ where: { email, password } });
-  if (userId !== userIdPost) return { status: 401, message: 'Unauthorized user' };
+  if (userId !== userIdPost) throw createError(401, 'Unauthorized user');
 
   await BlogPost.destroy({ where: { id } });
   await PostCategory.destroy({ where: { postId: id } });
