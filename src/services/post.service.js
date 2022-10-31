@@ -1,9 +1,14 @@
 const { Op } = require('sequelize');
-
-const { BlogPost, User, Category, PostCategory } = require('../models');
+const Sequelize = require('sequelize');
+const config = require('../config/config');
 const createError = require('../utils/createError');
 
-const verifyCategoryId = async (categoryIds) => {
+const { BlogPost, User, Category, PostCategory } = require('../models');
+
+const env = process.env.NODE_ENV || 'development';
+const sequelize = new Sequelize(config[env]);
+
+const verifyCategoryIds = async (categoryIds) => {
   const categoryIdsExists = categoryIds.map((id) => Category.findOne({
     where: { id },
   }));
@@ -21,18 +26,27 @@ const verifyIfUserBelongsToPost = async (email, password, userIdPost) => {
 };
 
 const insert = async ({ title, content, categoryIds }, { email }) => {
-  await verifyCategoryId(categoryIds);
-
-  const date = new Date();
+  await verifyCategoryIds(categoryIds);
   const { id: userId } = await User.findOne({ where: { email } });
+  const date = new Date();
 
-  const post = await BlogPost
-    .create({ title, content, userId, published: date, updated: date });
+  try {
+    const result = await sequelize.transaction(async (t) => {
+      const post = await BlogPost
+        .create({ title, content, userId, published: date, updated: date }, { transaction: t });
 
-  const { id: postId } = post;
-  categoryIds.map((id) => PostCategory.create({ postId, categoryId: id }));
+      const { id: postId } = post;
+      const promises = categoryIds.map((id) => PostCategory
+      .create({ postId, categoryId: id }, { transaction: t }));
+      await Promise.all(promises);
 
-  return post;
+      return post;
+    });
+
+    return result;
+  } catch (e) {
+    throw createError(500, 'Internal Server Error');
+  }
 };
 
 const findAll = async () => BlogPost.findAll({

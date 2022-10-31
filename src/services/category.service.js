@@ -10,7 +10,4 @@ const findAll = async () => {
   return categories;
 };
 
-module.exports = {
-  insert,
-  findAll,
-};
+module.exports = { insert, findAll };
