@@ -28,9 +28,4 @@ const remove = async (req, res) => {
   res.sendStatus(204);
 };
 
-module.exports = {
-  insert,
-  findAll,
-  findById,
-  remove,
-};
+module.exports = { insert, findAll, findById, remove };
