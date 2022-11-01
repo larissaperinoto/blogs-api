@@ -27,7 +27,7 @@ Na elaboração da API RESTful utilizou-se a arquitetura **Model-Service-Control
 
 ## ⚙️ Execução
 
-Para executar a aplicação localmente, inicie realizando o clone deste repositório com o comando abaixo.
+Para executar a aplicação inicie realizando o clone deste repositório com o comando abaixo.
 
     git clone git@github.com:larissaperinoto/blogs-api.git
     
@@ -61,6 +61,10 @@ Navegue até a raíz do projeto.
 
 <details>
    <summary><strong>Utilizando o Docker</strong></summary> 
+  </br>
+  
+  <strong>Obs:</strong> Para rodar a aplicação dessa forma você deve ter o Docker instalado na sua máquina.
+  
   </br>
   
   Na raíz do projeto, suba os containers <strong>blogs_api</strong> e <strong>blogs_api_db</strong> utilizando o docker-compose.
