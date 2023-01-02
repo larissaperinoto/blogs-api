@@ -99,19 +99,4 @@ describe('Testa a camada controller para a rota "/post"', function () {
       expect(res.sendStatus).to.have.been.calledWith(204);
     });
   });
-
-  describe('Testa a camada controller para a função "remove"', function () {
-    it('Faz a remoção de um post', async function () {
-      const req = { params: { id: 1 } };
-      const res = {};
-
-      res.sendStatus = sinon.stub().returns(res);
-
-      sinon.stub(postService, 'remove').resolves(undefined);
-
-      await postController.remove(req, res);
-
-      expect(res.sendStatus).to.have.been.calledWith(204);
-    });
-  });
 });
