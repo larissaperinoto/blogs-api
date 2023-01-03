@@ -1,0 +1,585 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Blogs API",
+    "description": "The Blogs API helps to manage the content of a blog, allowing you to read, create, update and delete publications.",
+    "contact": {
+      "url": "https://larissaperinoto.com.br/",
+      "email": "perinotolarissa@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Login of users",
+        "description": "Allows the login of users who already have a record in the blogs's database",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "aplication/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "examples": {
+                "login": {
+                  "value": {
+                    "email": "lewishamilton@gmail.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are missing or invalid"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "summary": "Create new user",
+        "description": "Allows register new users in the blog's database",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "aplication/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Users"
+              },
+              "examples": {
+                "login": {
+                  "value": {
+                    "displayName": "Brett Wiltshire",
+                    "email": "brett@email.com",
+                    "password": "123456",
+                    "image": "https://love.doghero.com.br/wp-content/uploads/2018/12/golden-retriever-1.png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "'displayName' length must be at least 8 characters long. 'email' must be a valid email. 'password' length must be at least 6 characters long"
+          },
+          "409": {
+            "description": "User already registered"
+          }
+        }
+      },
+      "get": {
+        "summary": "Read all users",
+        "description": "Returns an array with all users registered in the store",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "image": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/:id": {
+      "get": {
+        "summary": "Read user by id",
+        "description": "Returns the user corresponding to the id sent by the route if it exists",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "User id to search",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User does not exist"
+          }
+        }
+      }
+    },
+    "/user/me": {
+      "delete": {
+        "summary": "Delete a user by id",
+        "description": "Allows to delete a user corresponding to the id. The API uses the authentication token in the headers, to know the corresponding logged in user to be deleted",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "header",
+            "description": "User id to delete",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "post": {
+        "summary": "Create new categories",
+        "description": "Allows register new categories for blog posts",
+        "tags": ["Categories"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "aplication/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "login": {
+                  "value": {
+                    "name": "Typescript"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Categories"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "'name' is required"
+          }
+        }
+      },
+      "get": {
+        "summary": "Read all categories",
+        "description": "Return an array with all existing categories in the database",
+        "tags": ["Categories"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Categories"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post": {
+      "post": {
+        "summary": "Create a new post",
+        "description": "Allows to create a new post",
+        "tags": ["Posts"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "aplication/json": {
+              "schema": {
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "categoriesId": {
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Posts"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are missing. One or more 'categoryIds' not found"
+          }
+        }
+      },
+      "get": {
+        "summary": "Read all posts",
+        "description": "Return an array with all posts registered in the databases",
+        "tags": ["Posts"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PostById"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post/:id": {
+      "get": {
+        "summary": "Search a post by id",
+        "description": "Returns a post corresponding to the id, if it exists in the database",
+        "tags": ["Posts"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Post id to search",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostById"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post does not exist"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a post by id",
+        "description": "Alows to update a post corresponding to the id, if it exists in the database",
+        "tags": ["Posts"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Post id to updated",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "aplication/json": {
+              "schema": {
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostById"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields are missing"
+          },
+          "401": {
+            "description": "Unauthorized user"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a post by id",
+        "description": "Allows to delete a post corresponding to the id if it exists",
+        "tags": ["Posts"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Post id to delete",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Post does not exist"
+          },
+          "401": {
+            "description": "Unauthorized user"
+          }
+        }
+      }
+    },
+    "/post/search?q=:searchTerm": {
+      "get": {
+        "summary": "Returns a blog post based on the q term in the url",
+        "description": "Return an array of blog posts that contain the term passed in the URL in their title or content. Return an empty array if no blog post matches the search",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Term for blog post search",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PostById"
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Users": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "Categories": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Posts": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "published": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PostById": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "published": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user": {
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "displayName": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "image": {
+                "type": "string"
+              }
+            }
+          },
+          "categories": {
+            "items": {
+              "$ref":"#/components/schemas/Categories"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
