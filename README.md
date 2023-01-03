@@ -1,102 +1,121 @@
 # Blogs API
 
-A [Trybe](https://www.betrybe.com/) é uma escola de tecnologia com foco em formação de Desenvolvedores Web e o projeto Blogs API foi proposto como atividade de aprimoramento dos estudos sobre desenvolvimento back-end. 
+[Trybe](https://www.betrybe.com/) is a technology school focused on training Web Developers and the Blogs API project was proposed as an activity to improve studies on back-end development.
 
-## Objetivo
+## Description
 
-A aplicação desenvolvida é uma API e um banco de dados com o conteúdo de um blog. A Aplicação deve permitir fazeer operações de criação, leitura, atualização e remoção das informações do blog no banco de dados. Além de realizar as devidas autenticações para conceder permissões aos usuários.
+The application is an API and a database with the content of a blog. It must allow creating, reading, updating and removing blog information from the database. It also performs authentication to grant permissions to users.
 
-## Tecnologias e Ferramentas
+
+## Technologies and Tools
 <div>
     <img src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white" alt="mysql"/>
     <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="nodejs"/>
     <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white" alt="docker"/>
     <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="express"/>
     <img src="https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white" alt="sequelize"/>
+    <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white" alt="Swagger"/>
 </div>
 
 <br>
 
-Na elaboração da API RESTful utilizou-se a arquitetura **Model-Service-Controller(MSC)**, além das seguintes ferramentas:
+In the elaboration of the RESTful API, the **Model-Service-Controller(MSC)** architecture was used.The other technologies and tools were:
 
 - [Node.JS](https://nodejs.org/en/)
 - [Express](https://expressjs.com/pt-br/)
 - [MySQL](https://www.mysql.com/)
 - [Docker](https://www.docker.com/)
 - [Sequelize](https://sequelize.org/)
+- [Swagger](https://swagger.io/)
 
-## ⚙️ Execução
+## ⚙️ How to use
 
-Para executar a aplicação inicie realizando o clone deste repositório com o comando abaixo.
+To run the application start with the repositorie clone using the command bellow.
 
     git clone git@github.com:larissaperinoto/blogs-api.git
     
-Navegue até a raíz do projeto.
+Navigate to the project root
 
     cd blogs-api/
     
 <details>
-   <summary><strong>Rodando local</strong></summary> 
+   <summary><strong>Running locally</strong></summary> 
   </br>
-  <strong>Obs:</strong> Para rodar a aplicação dessa forma você deve ter o Node instalado na sua máquina.
+  <strong>Obs:</strong> To run the application this way you must have [Node](https://nodejs.org/en/) installed on your machine.
   </br>
   </br>
-  Instale as dependências com o comando abaixo.
+  
+  In the root of the project run the command below to install the dependencies.
   
     npm install
   
-  Faça login no MySQL usando suas credenciais locais.
+  Login to the database using your credentials.
+ 
+    mysql -u <your-username> -p
   
-    mysql -r <seu-usuario> -p
-  
-  Execute o comandos para a criação do banco **BlogsApi** 
+  Run the commands to create the **BlogsApi** database
   
     npm prestart
     
-  Inicie a aplicação com o <strong>nodemon</strong> comando abaixo.
+  Start the application with <strong>nodemon</strong> using the command bellow.
   
     npm debug
   
 </details>
 
 <details>
-   <summary><strong>Utilizando o Docker</strong></summary> 
+   <summary><strong>Running with Docker</strong></summary> 
   </br>
   
-  <strong>Obs:</strong> Para rodar a aplicação dessa forma você deve ter o Docker instalado na sua máquina.
+  <strong>Obs:</strong> To run the application this way you must have [Docker](https://www.docker.com/) installed on your machine.
   
   </br>
   
-  Na raíz do projeto, suba os containers <strong>blogs_api</strong> e <strong>blogs_api_db</strong> utilizando o docker-compose.
+  In the root of the project, upload the <strong>blogs_api</strong> and <strong>blogs_api_db</strong> containers using docker-compose.
 
     docker-compose up -d
     
-  Abra o terminal do container <strong>blogs_api</strong>.
+  Open the <strong>blogs_api</strong> container terminal.
 
     docker exec -it blogs_api bash
 
-  Uma vez no terminal do container, execute o comando abaixo para instalar as dependencias do projeto.
+  Once in the container terminal, run the command below to install the dependencies.
     
     npm install
     
-  Para se conectar com o banco de dados, abra o terminal do container <strong>blogs_api_db</strong>.
+  To connect with database, open the <strong>blogs_api_db</strong> container terminal.
   
     docker exec -it blogs_api_db bash
     
-  Faça login no banco de dados utilizando as credencias descritas no arquivo <strong>docker-compose.yaml</strong>.
+  Login to the database using the credentials described in the <strong>docker-compose.yaml</strong>.
   
     mysql -r root -p
 
-  Execute o comandos para a criação do banco **BlogsApi** 
+  To create the database, run the command bellow in the <strong>store_manager</strong> container terminal.
   
     npm prestart
     
-  Para subir o servidor com o <strong>nodemon</strong> utilize o comando abaixo no terminal do container **blogs_api**.
+  To start the server with <strong>nodemon</strong> use the command bellow in the terminal of the <strong>store_manager</strong> container.
+
     
     npm run debug
+    
+</details>
+
+## Routes
+
+ You can check all routes by accessing the /docs endpoint in your browser when running the application.
+
+<details>
+    <summary>Routes preview</summary>
+    
+
+![Captura de tela de 2023-01-03 12-17-30](https://user-images.githubusercontent.com/98956659/210414272-be24136f-e2e9-4b72-8c83-f1c98ba4bc84.png)
+![Captura de tela de 2023-01-03 12-17-42](https://user-images.githubusercontent.com/98956659/210414520-2b59fb45-9162-4164-81c0-44f2369ea48f.png)
+
     
 </details>
     
 ---
  
-Desenvolvido por [Larissa Perinoto](www.linkedin.com/in/larissaperinoto), © 2022.
+Developed by [Larissa Perinoto](www.linkedin.com/in/larissaperinoto), © 2022.
