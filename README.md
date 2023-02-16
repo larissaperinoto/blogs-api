@@ -91,11 +91,11 @@ Navigate to the project root
   
     mysql -r root -p
 
-  To create the database, run the command bellow in the <strong>store_manager</strong> container terminal.
+  To create the database, run the command bellow in the <strong>blogs_api</strong> container terminal.
   
     npm prestart
     
-  To start the server with <strong>nodemon</strong> use the command bellow in the terminal of the <strong>store_manager</strong> container.
+  To start the server with <strong>nodemon</strong> use the command bellow in the terminal of the <strong>blogs_api</strong> container.
 
     
     npm run debug
